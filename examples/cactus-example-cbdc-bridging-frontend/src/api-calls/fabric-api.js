@@ -34,7 +34,7 @@ export async function mintTokensFabric(frontendUser, amount) {
     {
       contractName: FABRIC_CONTRACT_CBDC_ERC20_NAME,
       channelName: FABRIC_CHANNEL_NAME,
-      params: [amount.toString(), fabricID],
+      params: [amount.toString()],
       methodName: "Mint",
       invocationType: "FabricContractInvocationType.SEND",
       signingCredential: {
