@@ -1,8 +1,6 @@
-import { Given, When, Then, Before, After } from "cucumber";
-import { expect } from "chai";
-import axios from "axios";
 import CryptoMaterial from "../../../../crypto-material/crypto-material.json";
 import { getEthAddress, getFabricId, getUserFromPseudonim } from "./common";
+import { Given, When, Then, Before, After } from "@cucumber/cucumber";
 import {
   deleteFabricAssetReference,
   fabricAssetReferenceExists,
@@ -12,6 +10,8 @@ import {
   resetFabric,
   refundFabricTokens,
 } from "../fabric-helper";
+import assert from "assert";
+import axios from "axios";
 
 const FABRIC_CHANNEL_NAME = "mychannel";
 const FABRIC_CONTRACT_CBDC_ERC20_NAME = "cbdc";
@@ -42,8 +42,7 @@ Given(
         },
       },
     );
-
-    expect(await getFabricBalance(getFabricId(user))).to.equal(amount);
+    assert.equal(await getFabricBalance(getFabricId(user)), amount);
   },
 );
 
@@ -112,9 +111,8 @@ Then(
         },
       )
       .catch((err) => {
-        expect(err.response.statusText).to.contain(
-          `client is not authorized to perform the operation`,
-        );
+        console.log(err)
+        assert.match(err.response.data.error, /client is not authorized to perform the operation/);
       });
   },
 );
@@ -140,7 +138,7 @@ Then(
         },
       )
       .catch((err) => {
-        expect(err.response.statusText).to.contain("has insufficient funds");
+        assert.match(err.response.data.error, /has insufficient funds/);
       });
   },
 );
@@ -148,29 +146,28 @@ Then(
 Then(
   "{string} has {int} CBDC available in the source chain",
   async function (user: string, amount: number) {
-    expect(await getFabricBalance(getFabricId(user))).to.equal(amount);
+   assert.equal(await getFabricBalance(getFabricId(user)), amount);
+
   },
 );
 
 Then(
   "the asset reference chaincode has an asset reference with id {string}",
   async function (assetRefID: string) {
-    expect(await readFabricAssetReference(assetRefID)).to.not.be.undefined;
+    assert.notEqual(await readFabricAssetReference(assetRefID), undefined);
   },
 );
 
 Then(
   "the asset reference with id {string} is locked in the source chain",
   async function (assetRefID: string) {
-    expect((await readFabricAssetReference(assetRefID)).isLocked).to.equal(
-      true,
-    );
+    assert.equal((await readFabricAssetReference(assetRefID)).isLocked, true);
   },
 );
 
 Then(
   "the asset reference chaincode has no asset reference with id {string}",
   async function (assetRefID: string) {
-    expect(await fabricAssetReferenceExists(assetRefID)).to.equal("false");
+    assert.equal(await fabricAssetReferenceExists(assetRefID), "false");
   },
 );

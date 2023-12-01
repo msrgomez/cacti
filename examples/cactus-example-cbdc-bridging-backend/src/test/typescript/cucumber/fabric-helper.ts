@@ -1,6 +1,6 @@
-import axios from "axios";
-import { getUserFromPseudonim } from "./steps/common";
 import CryptoMaterial from "../../../crypto-material/crypto-material.json";
+import { getUserFromPseudonim } from "./steps/common";
+import axios from "axios";
 
 const FABRIC_CHANNEL_NAME = "mychannel";
 const FABRIC_CONTRACT_CBDC_ERC20_NAME = "cbdc";

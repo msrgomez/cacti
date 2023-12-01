@@ -1,8 +1,8 @@
-import { Then } from "cucumber";
-import { expect } from "chai";
-import axios from "axios";
 import CryptoMaterial from "../../../../crypto-material/crypto-material.json";
 import { getFabricId, getEthAddress } from "./common";
+import { Then } from "@cucumber/cucumber";
+import assert from "assert";
+import axios from "axios";
 
 const MAX_RETRIES = 5;
 const MAX_TIMEOUT = 5000;
@@ -64,7 +64,7 @@ Then(
       },
     );
 
-    expect(response.status).to.equal(200);
+    assert.equal(response.status, 200);
   },
 );
 
@@ -126,7 +126,8 @@ Then(
         },
       )
       .catch((err) => {
-        expect(err.response.status).to.equal(500);
+        console.log(err);
+        assert.equal(err.response.status, 500);
       });
   },
 );

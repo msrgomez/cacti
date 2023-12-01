@@ -1,16 +1,16 @@
-import { Given, When, Then, Before, After } from "cucumber";
-import { expect } from "chai";
-import axios from "axios";
+import AssetReferenceContractJson from "../../../../solidity/asset-reference-contract/AssetReferenceContract.json";
+import CBDCcontractJson from "../../../../solidity/cbdc-erc-20/CBDCcontract.json";
 import CryptoMaterial from "../../../../crypto-material/crypto-material.json";
+import { Given, When, Then, Before, After } from "@cucumber/cucumber";
+import { getEthAddress, getPrvKey } from "./common";
+import assert from "assert";
+import axios from "axios";
 import {
   getBesuBalance,
   isBesuAssetReference,
   lockBesuAssetReference,
   resetBesu,
 } from "../besu-helper";
-import AssetReferenceContractJson from "../../../../solidity/asset-reference-contract/AssetReferenceContract.json";
-import CBDCcontractJson from "../../../../solidity/cbdc-erc-20/CBDCcontract.json";
-import { getEthAddress, getPrvKey } from "./common";
 
 const BESU_CONTRACT_CBDC_ERC20_NAME = CBDCcontractJson.contractName;
 const BESU_CONTRACT_ASSET_REF_NAME = AssetReferenceContractJson.contractName;
@@ -103,21 +103,21 @@ When(
 Then(
   "the asset reference smart contract has an asset reference with id {string}",
   async function (assetRefID: string) {
-    expect(await isBesuAssetReference(assetRefID)).to.be.true;
+    assert.equal(await isBesuAssetReference(assetRefID), true)
   },
 );
 
 Then(
   "the asset reference smart contract has no asset reference with id {string}",
   async function (assetRefID: string) {
-    expect(await isBesuAssetReference(assetRefID)).to.be.false;
+    assert.equal(await isBesuAssetReference(assetRefID), false)
   },
 );
 
 Then(
   "{string} has {int} CBDC available in the sidechain",
   async function (user: string, amount: number) {
-    expect(await getBesuBalance(getEthAddress(user))).to.equal(amount);
+    assert.equal(await getBesuBalance(getEthAddress(user)), amount)
   },
 );
 
@@ -141,7 +141,7 @@ Then(
       },
     );
 
-    expect(response.data.callOutput).to.equal(true);
+    assert.equal(response.data.callOutput, true)
   },
 );
 
@@ -153,9 +153,7 @@ Then(
       getPrvKey(user),
       assetRefID,
     ).catch((err) => {
-      expect(err.response.data.error).to.contain(
-        `Transaction has been reverted by the EVM`,
-      );
+      assert.match(err.response.data.error, /Transaction has been reverted by the EVM/)
     });
   },
 );

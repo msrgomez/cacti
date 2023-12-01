@@ -89,11 +89,15 @@ export class AssetReferenceContract extends Contract {
     console.log(
       "Calling refund tokens to " + finalFabricIdentity + " from " + ethAddress,
     );
-    await ctx.stub.invokeChaincode(
+    const res = await ctx.stub.invokeChaincode(
       "cbdc",
       ["Refund", finalFabricIdentity, numberTokens.toString(), ethAddress],
       ctx.stub.getChannelID(),
     );
+
+    if (res.status !== 200) {
+      throw new Error(res.message);
+    }
 
     await this.DecreaseBridgedAmount(ctx, numberTokens);
   }

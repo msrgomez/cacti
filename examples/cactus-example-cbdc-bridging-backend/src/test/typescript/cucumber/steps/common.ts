@@ -1,5 +1,8 @@
-import { assert } from "chai";
 import CryptoMaterial from "../../../../crypto-material/crypto-material.json";
+import { setDefaultTimeout } from "@cucumber/cucumber";
+import assert from "assert";
+
+setDefaultTimeout(10 * 1000);
 
 export function getUserFromPseudonim(user: string): string {
   switch (user) {
@@ -10,7 +13,7 @@ export function getUserFromPseudonim(user: string): string {
     case "bob":
       return "bridge";
     default:
-      assert.fail(0, 1, "Invalid user provided");
+      assert.fail("Invalid user provided");
   }
 }
 
@@ -23,7 +26,7 @@ export function getFabricId(user: string): string {
     case "bridge":
       return CryptoMaterial.accounts["bridge"].fabricID;
     default:
-      assert.fail(0, 1, "Invalid user provided");
+      assert.fail("Invalid user provided");
   }
 }
 
@@ -36,7 +39,7 @@ export function getEthAddress(user: string): string {
     case "bridge":
       return CryptoMaterial.accounts["bridge"].ethAddress;
     default:
-      assert.fail(0, 1, "Invalid user provided");
+      assert.fail("Invalid user provided");
   }
 }
 
@@ -49,6 +52,6 @@ export function getPrvKey(user: string): string {
     case "bridge":
       return CryptoMaterial.accounts["bridge"].privateKey;
     default:
-      assert.fail(0, 1, "Invalid user provided");
+      assert.fail("Invalid user provided");
   }
 }

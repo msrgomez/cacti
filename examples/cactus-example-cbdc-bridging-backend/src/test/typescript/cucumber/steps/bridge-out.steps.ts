@@ -1,8 +1,8 @@
-import { When, Then } from "cucumber";
-import { expect } from "chai";
-import axios from "axios";
 import CryptoMaterial from "../../../../crypto-material/crypto-material.json";
 import { getUserFromPseudonim, getFabricId, getEthAddress } from "./common";
+import { When, Then } from "@cucumber/cucumber";
+import assert from "assert";
+import axios from "axios";
 
 const MAX_RETRIES = 5;
 const MAX_TIMEOUT = 5000;
@@ -28,7 +28,7 @@ Then(
       },
     );
 
-    expect(parseInt(response.data.functionOutput)).to.equal(amount);
+    assert.equal(parseInt(response.data.functionOutput), amount);
   },
 );
 
@@ -88,8 +88,7 @@ When(
         recipientLedgerAssetID: "FABRIC_ASSET_ID",
       },
     );
-
-    expect(response.status).to.equal(200);
+    assert.equal(response.status, 200);
   },
 );
 
@@ -152,7 +151,8 @@ Then(
         },
       )
       .catch((err) => {
-        expect(err.response.data.error).to.contain(failureReason);
+        console.log(err.response.data.error)
+        assert.match(err.response.data.error, new RegExp(failureReason));
       });
   },
 );

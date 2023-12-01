@@ -462,18 +462,19 @@ export class BesuOdapGateway extends PluginOdapGateway {
       const userEthAddress =
         sessionData.assetProfile.keyInformationLink[2].toString();
 
+      // instead of creating an asset reference, mint tokens to the user
       const assetCreateResponse = await this.besuApi.invokeContractV1({
         contractName: this.besuContractName,
         invocationType: EthContractInvocationType.Send,
-        methodName: "createAssetReference",
+        methodName: "mint",
         gas: 1000000,
-        params: [assetID, amount, userEthAddress],
+        params: [userEthAddress, amount],
         signingCredential: this.besuWeb3SigningCredential,
         keychainId: this.besuKeychainId,
       } as BesuInvokeContractV1Request);
 
       if (assetCreateResponse.status != 200) {
-        throw new Error(`${fnTag}, besu unlock asset error`);
+        throw new Error(`${fnTag}, besu mint tokens error`);
       }
 
       const assetCreateResponseDataJson = JSON.parse(
@@ -501,7 +502,7 @@ export class BesuOdapGateway extends PluginOdapGateway {
     this.sessions.set(sessionID, sessionData);
 
     this.log.info(
-      `${fnTag}, proof of the asset create: ${besuCreateAssetProof}`,
+      `${fnTag}, proof of mint asset: ${besuCreateAssetProof}`,
     );
 
     await this.storeOdapProof({
