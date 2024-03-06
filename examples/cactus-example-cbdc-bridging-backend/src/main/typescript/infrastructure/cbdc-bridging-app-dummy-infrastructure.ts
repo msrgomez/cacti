@@ -169,6 +169,11 @@ export class CbdcBridgingAppDummyInfrastructure {
       enrollmentID: "userB",
       organization: "org1",
     });
+    const [userIdentity3] = await this.fabric.enrollUserV2({
+      wallet: adminWalletOrg1,
+      enrollmentID: "userC",
+      organization: "org1",
+    });
 
     const enrollAdminOutOrg2 = await this.fabric.enrollAdminV2({
       organization: "org2",
@@ -188,8 +193,11 @@ export class CbdcBridgingAppDummyInfrastructure {
     const keychainEntryKey2 = "userB";
     const keychainEntryValue2 = JSON.stringify(userIdentity2);
 
-    const keychainEntryKey3 = "bridge";
-    const keychainEntryValue3 = JSON.stringify(bridgeIdentity);
+    const keychainEntryKey3 = "userC";
+    const keychainEntryValue3 = JSON.stringify(userIdentity3);
+
+    const keychainEntryKey4 = "bridge";
+    const keychainEntryValue4 = JSON.stringify(bridgeIdentity);
 
     const keychainPlugin = new PluginKeychainMemory({
       instanceId: uuidv4(),
@@ -199,6 +207,7 @@ export class CbdcBridgingAppDummyInfrastructure {
         [keychainEntryKey1, keychainEntryValue1],
         [keychainEntryKey2, keychainEntryValue2],
         [keychainEntryKey3, keychainEntryValue3],
+        [keychainEntryKey4, keychainEntryValue4],
       ]),
     });
 
@@ -261,6 +270,7 @@ export class CbdcBridgingAppDummyInfrastructure {
     const accounts = [
       CryptoMaterial.accounts.userA.ethAddress,
       CryptoMaterial.accounts.userB.ethAddress,
+      CryptoMaterial.accounts.userC.ethAddress,
       CryptoMaterial.accounts.bridge.ethAddress,
     ];
 
